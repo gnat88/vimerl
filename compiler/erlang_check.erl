@@ -11,10 +11,12 @@ main([File, Outdir]) ->
             report,
             {i, Dir ++ "/include"}],
     RebarFile = rebar_file(Dir),
-    RebarOpts = rebar_opts(RebarFile),
+    RebarOpts = rebar_opts(Dir ++ "/" ++ RebarFile),
     code:add_patha(filename:absname("ebin")),
     CompileResult = compile:file(File, Defs ++ RebarOpts),
+    %%% 重新编译并生成beam文件
     recompile(File, RebarOpts, Outdir),
+    %%% 返回第一次编译结果
     CompileResult;
 main(_) ->
     io:format("Usage: ~s <file>~n", [escript:script_name()]),
